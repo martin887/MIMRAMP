@@ -170,7 +170,8 @@
                     "UserName": "[parameters('adminUserName')]",
                     "Password": "PrivateSettingsRef:Password"
                   }
-                },
+                }
+              },
                 "protectedSettings": {
                   "Items": {
                     "Password": "[parameters('adminPassword')]"
@@ -178,7 +179,7 @@
                 }
               }
             }
-          }
+          
         ]
       },
       {
