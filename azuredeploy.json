@@ -165,8 +165,7 @@
                 "ConfigurationFunction": "DC.ps1\\Main",
                 "Properties": {
                   "nodeName": "DC1",
-                  "domainName": "[parameters('domainName')]",
-                  "domainAdminCredentials": {
+                  "domainAdministratorCredential": {
                     "UserName": "[parameters('adminUserName')]",
                     "Password": "PrivateSettingsRef:Password"
                   }
