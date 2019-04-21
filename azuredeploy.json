@@ -148,7 +148,7 @@
             "name": "Microsoft.Powershell.DSC",
             "type": "extensions",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2016-03-30",
+            "apiVersion": "2017-03-30",
             "dependsOn": [
               "[resourceId('Microsoft.Compute/virtualMachines', 'DC1')]"
             ],
@@ -158,12 +158,11 @@
             "properties": {
               "publisher": "Microsoft.Powershell",
               "type": "DSC",
-              "typeHandlerVersion": "2.9",
+              "typeHandlerVersion": "2.19",
               "autoUpgradeMinorVersion": true,
               "settings": {
-                "configuration": {
-                  "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/DC.zip', parameters('_artifactsLocationSasToken')))]",                  "script": "DC.ps1",
-                  "function": "Main"
+                "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/DC.zip', parameters('_artifactsLocationSasToken')))]",
+                "ConfigurationFunction": "Main"
                 },
                 "configurationArguments": {
                   "nodeName": "DC1",
@@ -180,12 +179,7 @@
                 }
               }
             }
-          }
-  
-  
-  
-  
-  
+            
         ]
       },
       {
