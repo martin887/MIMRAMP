@@ -10,7 +10,7 @@
       "type": "securestring"
     },
     "domainName": {
-      "type":  "string"
+      "type": "string"
     },
     "storageaccount1Type": {
       "type": "string",
@@ -28,7 +28,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
       },
-      "defaultValue": "[deployment().properties.templateLink.uri]"
+      "defaultValue": "[deployment().templateLink]"
 
 
     },
@@ -179,12 +179,12 @@
               }
             }
           }
-        }   
+        }
 
 
-              
-            
-          
+
+
+
       ]
     },
     {
@@ -247,8 +247,7 @@
           "vmSize": "[variables('MIMSYNCVmSize')]"
         },
         "osProfile": {
-          "computerName": 
-            "MIMSYNC",
+          "computerName": "MIMSYNC",
           "adminUsername": "[parameters('AdminUsername')]",
           "adminPassword": "[parameters('AdminPassword')]"
         },
@@ -358,7 +357,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "DC1PIP"
       },
@@ -374,7 +373,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "MIMPORTALPIP"
       },
@@ -390,7 +389,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "MIMSYNCPIP"
       },
