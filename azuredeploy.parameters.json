@@ -4,10 +4,10 @@
   "parameters": {
 
     "AdminUserName": {
-      "value": "martin.cook"
+      "value": "generateval"
     },
     "AdminPassword": {
-      "value": "USDOIMlyy0241337!!@@"
+      "value": "generateval"
     },
     "domainName": {
       "value": "contoso.com"
