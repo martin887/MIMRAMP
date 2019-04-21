@@ -162,7 +162,7 @@
               "autoUpgradeMinorVersion": true,
               "settings": {
                 "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/DC.zip', parameters('_artifactsLocationSasToken')))]",
-                "ConfigurationFunction": "DC1.ps1\\Main",
+                "ConfigurationFunction": "DC.ps1\\Main",
                 "Properties": {
                   "nodeName": "DC1",
                   "domainName": "[parameters('domainName')]",
