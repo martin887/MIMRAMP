@@ -4,14 +4,13 @@ Configuration Main
 [CmdletBinding()]
  
 Param (
-    [string] $NodeName,
     [string] $domainName,
     [System.Management.Automation.PSCredential]$domainAdminCredentials
 )
  
 Import-DscResource -ModuleName PSDesiredStateConfiguration, xActiveDirectory
  
-Node $AllNodes.Where{$_.Role -eq "DC"}.Nodename
+Node localhost
     {
         LocalConfigurationManager
         {
