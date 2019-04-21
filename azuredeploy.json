@@ -28,7 +28,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
       },
-      "defaultValue": "[deployment().templateLink.uri]"
+      "defaultValue": "[deployment().properties.templateLink.uri]"
 
 
     },
