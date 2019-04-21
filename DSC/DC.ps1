@@ -1,81 +1,61 @@
-Configuration Main
+<#
+    .EXAMPLE
+        This example will create a new domain with a new forest and a forest functional level of Server 2016
+#>
+$ConfigurationData = @{
+    AllNodes = @(
+        @{
+            NodeName                    = 'localhost'
+            FFL                         = 'WinThreshold'
+            DomainName                  = 'contoso.com'
+
+            <#
+                NOTE! THIS IS NOT RECOMMENDED IN PRODUCTION.
+                This is added so that AppVeyor automatic tests can pass, otherwise
+                the tests will fail on passwords being in plain text and not being
+                encrypted. Because it is not possible to have a certificate in
+                AppVeyor to encrypt the passwords we need to add the parameter
+                'PSDscAllowPlainTextPassword'.
+                NOTE! THIS IS NOT RECOMMENDED IN PRODUCTION.
+            #>
+            PSDscAllowPlainTextPassword = $true
+        }
+    )
+}
+
+configuration Main
 {
- 
-[CmdletBinding()]
- 
-Param (
-    [string] $domainName,
-    [System.Management.Automation.PSCredential]$domainAdminCredentials
-)
- 
-Import-DscResource -ModuleName PSDesiredStateConfiguration, xActiveDirectory
- 
-Node localhost
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [System.Management.Automation.PSCredential]
+        $DomainAdministratorCredential
+    )
+
+    Import-DscResource -ModuleName PSDscResources
+    Import-DscResource -ModuleName xActiveDirectory
+    node $AllNodes.NodeName
     {
-        LocalConfigurationManager
+        WindowsFeature ADDS
         {
-            ConfigurationMode = 'ApplyAndAutoCorrect'
-            RebootNodeIfNeeded = $true
-            ActionAfterReboot = 'ContinueConfiguration'
-            AllowModuleOverwrite = $true
+            Name   = 'AD-Domain-Services'
+            Ensure = 'Present'        
         }
- 
-        WindowsFeature DNS_RSAT
-        { 
-            Ensure = "Present"
-            Name = "RSAT-DNS-Server"
-        }
- 
-        WindowsFeature ADDS_Install 
-        { 
-            Ensure = 'Present'
-            Name = 'AD-Domain-Services'
-        } 
- 
-        WindowsFeature RSAT_AD_AdminCenter 
+
+        WindowsFeature RSAT
         {
-            Ensure = 'Present'
-            Name   = 'RSAT-AD-AdminCenter'
-        }
- 
-        WindowsFeature RSAT_ADDS 
-        {
-            Ensure = 'Present'
-            Name   = 'RSAT-ADDS'
-        }
- 
-        WindowsFeature RSAT_AD_PowerShell 
-        {
-            Ensure = 'Present'
             Name   = 'RSAT-AD-PowerShell'
+            Ensure = 'Present'
         }
- 
-        WindowsFeature RSAT_AD_Tools 
+
+        xADDomain $Node.DomainName
         {
-            Ensure = 'Present'
-            Name   = 'RSAT-AD-Tools'
-        }
- 
-        WindowsFeature RSAT_Role_Tools 
-        {
-            Ensure = 'Present'
-            Name   = 'RSAT-Role-Tools'
-        }      
- 
-        WindowsFeature RSAT_GPMC 
-        {
-            Ensure = 'Present'
-            Name   = 'GPMC'
-        } 
-        xADDomain CreateForest 
-        { 
-            DomainName = $domainName           
-            DomainAdministratorCredential = $domainAdminCredentials
-            SafemodeAdministratorPassword = $domainAdminCredentials
-            DatabasePath = "C:\Windows\NTDS"
-            LogPath = "C:\Windows\NTDS"
-            SysvolPath = "C:\Windows\Sysvol"
-            DependsOn = '[WindowsFeature]ADDS_Install'
+            DomainName                    = $Node.DomainName
+            DomainAdministratorCredential = $DomainAdministratorCredential
+            SafemodeAdministratorPassword = $DomainAdministratorCredential
+            ForestMode                    = $Node.FFL
         }
     }
+
 }
