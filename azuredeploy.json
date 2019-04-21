@@ -164,7 +164,6 @@
                 "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/DC.zip', parameters('_artifactsLocationSasToken')))]",
                 "ConfigurationFunction": "DC.ps1\\Main",
                 "Properties": {
-                  "nodeName": "DC1",
                   "domainAdministratorCredential": {
                     "UserName": "[parameters('adminUserName')]",
                     "Password": "PrivateSettingsRef:Password"
