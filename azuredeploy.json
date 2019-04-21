@@ -162,8 +162,7 @@
               "autoUpgradeMinorVersion": true,
               "settings": {
                 "configuration": {
-                  "url": "[concat(parameters('_artifactsLocation'), '/', variables('DCArchiveFolder'), '/', variables('DCArchiveFileName'))]",
-                  "script": "DC.ps1",
+                  "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/DC.zip', parameters('_artifactsLocationSasToken')))]",                  "script": "DC.ps1",
                   "function": "Main"
                 },
                 "configurationArguments": {
