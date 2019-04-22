@@ -10,9 +10,7 @@
     },
     "domainName": {
       "value": "mydomain.local"
-    },
-    "dnsPrefix": {
-      "value": "GEN-UNIQUE"
     }
+
   }
 }
