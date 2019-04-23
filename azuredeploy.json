@@ -59,8 +59,11 @@
         "adVMName": "adVM",
         "adSubnetName": "adSubnet",
         "adSubnetAddressPrefix": "10.0.0.0/24",
-        "publicIPAddressName": "adPublicIP"
-
+        "publicIPAddressName": "adPublicIP",
+        "mimVMName": "mimVM",
+        "publicIPAddressNameMIM": "mimPublicIP",
+        "mimNicName": "mimNic",
+        "mimNicIPAddress": "10.0.0.5"
     },
     "resources": [
         {
@@ -104,6 +107,7 @@
                 }
             }
         },
+ 
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
@@ -254,6 +258,94 @@
                     }
                 }
             }
+        },
+        {
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressNameMIM')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "PublicIPAddress"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "mimpip"
+                }
+            }
+        },
+        {
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('mimNicName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "VNet"
+            ],
+           
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('mimNicIPAddress')]",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressNameMIM'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[variables('mimVMName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[variables('mimNicName')]"
+            ],
+            
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[variables('mimVMName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "[concat(variables('mimVMName'),'_OSDisk')]",
+                        "caching": "ReadOnly",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS"
+                        }
+                    },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('mimNicName'))]"
+                        }
+                    ]
+                }
+                
+            },
+            "resources": [
+                
+            ]
         }
-    ]
-}
+    }
+]}
