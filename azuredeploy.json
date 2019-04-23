@@ -307,7 +307,8 @@
             "name": "[variables('mimVMName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[variables('mimNicName')]"
+                "[variables('mimNicName')]",
+                "UpdateVNetDNS"
             ],
             
             "properties": {
